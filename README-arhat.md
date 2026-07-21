@@ -104,6 +104,9 @@ The following command line applications will be built:
 * `test_backend_ops.exe` - a tool for testing various llama.cpp backend operations
 * `test_llama_arch.exe` - a tool for testing support of various LLM architectures
 
+NOTE: You may need to adjust the compile time configuration for your GPU architecture
+as described below in the section "Architecture-specific configuration".
+
 
 ## Getting started with `llama_cli`
 
@@ -130,6 +133,74 @@ bin\release\llama_cli.exe -m .\models\gemma-3-1b-it-Q4_K_M.gguf
 The tool will download the model in memory and run it in conversation mode.
 
 Further examples of supported models are available in the Appendix B.
+
+
+## Origin of OpenCL kernels
+
+We use OpenCL 3.0 to implement GGML operations that are not natively supported by oneDNN.
+The respective OpenCL kernels have been ported from various GGML backends like OpenCL,
+CUDA, and Vulkan. For several computationally complex operations like matrix multiplication
+or flash attention we have ported multiple kernels from different backends and compared
+performance of the resulting code. In the most critical cases we implemented further
+performance tuning specific for Intel GPU target platform. (Kernel tuning is an ongoing
+effort as there is certainly more room for further optimization.)
+
+
+## Architecture-specific configuration
+
+Computational kernels and their launch parameters may depend on details of the target
+GPU architecture. Currently, Arhat does not automatically detect the architecture.
+Instead, the architecture shall be specified at compile time using the constant
+`CONFIG_GPU_ARCH` specified in the header file 
+[onednn/ocl/config_arch.hpp](./arhat/src/arhat/onednn/ocl/config_arch.hpp) as follows:
+
+```
+constexpr int GPU_ARCH_UHD = 0;
+constexpr int GPU_ARCH_TGL = 1;
+constexpr int GPU_ARCH_ARL = 2;
+constexpr int GPU_ARCH_LNL = 3;
+
+constexpr int CONFIG_GPU_ARCH = GPU_ARCH_LNL;
+```
+
+The options `ARL` and `LNL` correspond to the Arc iGPUs of the Arrow Lake and
+Lunar Lake processor families. The Arrow Lake family includes Intel Core Ultra 255H and 285H
+processors with Intel Arc 140T iGPU (Xe+ architecture). The Lunar Lake family includes
+Intel Core Ultra 258V and 288V processors with Intel Arc 140V iGPU (Xe2 architecture).
+
+The options `UHD` and `TGL` correspond respectively to Intel UHD graphics and Iris Xe iGPU 
+of Tiger Lake processor family. They are considered legacy and retained mainly for backwards
+compatibility. (But nevertheless, both Arhat and oneDNN still can run even on an older processor
+with Intel UHD 630 graphics.)
+
+We did not yet validate Arhat on discrete Intel GPUs. However, we believe that support for these
+GPUs can be easily implemented by a modest update of the code. For the Arc Battlemage
+architecture, the Lunar Lake option should be a good starting point. The code in these source
+files may require moderate update:
+
+* [onednn/gpu/context.cpp](./arhat/src/arhat/onednn/gpu/context.cpp) - function `Context::InitDeviceInfo`
+* [onednn/ocl/device_info.cpp](./arhat/src/arhat/onednn/ocl/device_info.cpp)
+
+Currently, the llama.cpp framework needs to know the size of available GPU memory to perform
+tensor reservation. The Arhat backend for GGML does not automatically query the GPU memory size.
+This size shall be configured at the compilation time within the function
+`ggml_backend_arhat_device_get_memory` at the source file
+[ggml-arhat/ggml-arhat.cpp](./ggml/src/ggml-arhat/ggml-arhat.cpp) as follows:
+
+```
+static void ggml_backend_arhat_device_get_memory(ggml_backend_dev_t dev, size_t *free, size_t *total) {
+    GGML_UNUSED(dev);
+    // TODO: Replace this stub with actual device query
+    constexpr size_t KB = size_t(1024);
+    size_t dummy = size_t(24) * KB * KB * KB;
+    *free = dummy;
+    *total = dummy;
+}
+```
+
+The default size of 24 GB corresponds to our reference system of Arrow Lake or Lunar Lake
+family with 32 GB of unified memory running Windows 11. (Note that Intel graphics driver
+on Windows allows configuring the size of unified memory available for use by the GPU.)
 
 
 ## Contributing
