@@ -373,10 +373,6 @@ static const char *ggml_backend_arhat_device_get_description(ggml_backend_dev_t 
 
 static void ggml_backend_arhat_device_get_memory(ggml_backend_dev_t dev, size_t *free, size_t *total) {
     GGML_UNUSED(dev);
-#if 0 // TODO: Revise this
-    *free = 0;
-    *total = 0;
-#endif
     // TODO: Replace this stub with actual device query
     constexpr size_t KB = size_t(1024);
     size_t dummy = size_t(24) * KB * KB * KB;
