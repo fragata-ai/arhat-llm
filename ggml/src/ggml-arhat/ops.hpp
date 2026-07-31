@@ -37,5 +37,9 @@ namespace core = arhat::core;
 
 void ggml_arhat_init_op_map();
 bool ggml_arhat_supports_op(ggml_backend_dev_t dev, const ggml_tensor *tensor);
-std::unique_ptr<core::Node> ggml_arhat_create_node(core::Context *context, ggml_tensor *tensor);
+std::unique_ptr<core::Node> ggml_arhat_create_node(
+    core::Context *context, 
+    ggml_tensor *tensor, 
+    int bufferIndex,
+    size_t tensorAddr);
 

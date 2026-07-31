@@ -127,6 +127,22 @@ public:
 };
 
 //
+//    BufferManager
+//
+
+class BufferManager {
+public:
+    BufferManager() { }
+    virtual ~BufferManager() { }
+public:
+    virtual int CreateBuffer() = 0;
+    virtual void ResetBuffer(int index) = 0;
+    virtual void DeleteBuffer(int index) = 0;
+    virtual void SetBuffer(int index, size_t addr) = 0;
+    virtual dnnl::memory GetMemory(int index, const dnnl::memory::desc &desc) = 0;
+};
+
+//
 //    TempMemory
 //
 
@@ -162,6 +178,11 @@ public:
     core::Device *GetDevice() override;
     void Wait() override;
     void Reset() override;
+    // buffer management
+    int CreateBuffer() override;
+    void ResetBuffer(int index) override;
+    void DeleteBuffer(int index) override;
+    void SetBuffer(int index, size_t addr) override;
     // node factories
     std::unique_ptr<core::Node> CreateTensor(
         core::DataType type, const core::Dims &shape) override;
@@ -297,11 +318,17 @@ public:
     NodeBase *CastNode(core::Node *node);
     void MemoryPoolStart();
     TempMemory AllocTempMemory(const dnnl::memory::desc &desc);
+    dnnl::memory GetMemory(const dnnl::memory::desc &desc);
+private:
+    void CreateMemoryPool();
+    void CreateBufferManager();
 private:
     Device *m_device;
     dnnl::engine m_engine;
     dnnl::stream m_stream;
     std::unique_ptr<MemoryPool> m_memoryPool;
+    std::unique_ptr<BufferManager> m_bufferManager;
+    int m_bufferIndex;
 };
 
 //

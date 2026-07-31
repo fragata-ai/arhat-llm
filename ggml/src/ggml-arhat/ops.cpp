@@ -23,6 +23,7 @@
 * SOFTWARE.
 */
 
+#include <cstdio>
 #include <cstdint>
 #include <cassert>
 #include <vector>
@@ -1785,7 +1786,21 @@ bool ggml_arhat_supports_op(ggml_backend_dev_t dev, const ggml_tensor *tensor) {
     return true;
 }
 
-std::unique_ptr<core::Node> ggml_arhat_create_node(core::Context *context, ggml_tensor *tensor) {
+std::unique_ptr<core::Node> ggml_arhat_create_node(
+        core::Context *context,
+        ggml_tensor *tensor, 
+        int bufferIndex,
+        size_t tensorAddr) {
+    size_t addr = core::Context::NULL_BUFFER_ADDR;
+    if (tensor->op != GGML_OP_NONE &&
+            tensor->op != GGML_OP_VIEW &&
+            tensor->op != GGML_OP_TRANSPOSE &&
+            tensor->op != GGML_OP_PERMUTE &&
+            tensor->op != GGML_OP_RESHAPE &&
+            tensor->op != GGML_OP_SET_ROWS) {
+        addr = tensorAddr;
+    }
+    context->SetBuffer(bufferIndex, addr);
     NodeFactory factory = get_node_factory(tensor);
     GGML_ASSERT(factory != nullptr);
     return factory(context, tensor);

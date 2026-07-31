@@ -22,6 +22,7 @@
 * SOFTWARE.
 */
 
+#include <cstdio>
 #include <cstdint>
 #include <cstring>
 #include <cassert>
@@ -37,6 +38,8 @@
 
 #include "arhat/onednn/base/runtime.hpp"
 #include "arhat/onednn/base/quant.hpp"
+
+constexpr bool ENABLE_LOG_MEMORY_POOL = false;
 
 namespace arhat {
 namespace onednn {
@@ -75,7 +78,10 @@ MemoryPoolImpl::MemoryPoolImpl(Context *context):
 MemoryPoolImpl::~MemoryPoolImpl() { }
 
 void MemoryPoolImpl::Reset() {
-//printf("@@@ ==== MemoryPoolImpl::Reset: %zd buffers: total %zd bytes\n", m_pool.size(), m_size);
+    if (ENABLE_LOG_MEMORY_POOL) {
+        printf("[Arhat] MemoryPool: Reset: %zd buffers: total %zd bytes\n", 
+            m_pool.size(), m_size);
+    }
     m_pool.clear();
     m_size = 0;
 }
@@ -104,7 +110,9 @@ int MemoryPoolImpl::Alloc(size_t size) {
         }
     }
     if (found >= 0) {
-//printf("@@@ ---- MemoryPoolImpl::Alloc: size %zd -> found %d\n", size, found);
+        if (ENABLE_LOG_MEMORY_POOL) {
+            printf("[Arhat] MemoryPool: Alloc: size %zd -> found %d\n", size, found);
+        }
         m_pool[found].used = true;
         return found;
     } 
@@ -118,7 +126,10 @@ int MemoryPoolImpl::Alloc(size_t size) {
     dnnl::memory mem(desc, engine);
     m_pool.push_back({mem, adjSize, true});
     m_size += adjSize;
-//printf("@@@ ++++ MemoryPoolImpl::Alloc: size %zd -> index %d adjSize %zd total size %zd\n", size, count, adjSize, m_size); 
+    if (ENABLE_LOG_MEMORY_POOL) {
+        printf("[Arhat] MemoryPool: Alloc: size %zd -> index %d adjSize %zd total size %zd\n", 
+            size, count, adjSize, m_size); 
+    }
     return count;
 }
 
@@ -133,7 +144,8 @@ dnnl::memory MemoryPoolImpl::Get(int index) {
 //
 
 Context::Context(Device *device):
-        m_device(device) {
+        m_device(device),
+        m_bufferIndex(0) {
     core::DeviceKind deviceKind = device->Kind();
     dnnl::engine::kind kind =
         (deviceKind == core::DeviceKind::Cpu) ?
@@ -142,7 +154,8 @@ Context::Context(Device *device):
     int index = device->Index();
     m_engine = dnnl::engine(kind, index);
     m_stream = dnnl::stream(m_engine);
-    m_memoryPool = std::make_unique<MemoryPoolImpl>(this);
+    CreateMemoryPool();
+    CreateBufferManager();
 }
 
 Context::~Context() { }
@@ -158,6 +171,7 @@ void Context::Wait() {
 void Context::Reset() {
     core::Context::Reset();
     m_memoryPool->Reset();
+    // must not reset m_bufferManager
 }
 
 NodeBase *Context::CastNode(core::Node *node) {
@@ -187,6 +201,14 @@ TempMemory Context::AllocTempMemory(const dnnl::memory::desc &desc) {
     }
     int index = m_memoryPool->Alloc(bytes);
     return TempMemory(m_memoryPool.get(), index);
+}
+
+dnnl::memory Context::GetMemory(const dnnl::memory::desc &desc) {
+    return m_bufferManager->GetMemory(m_bufferIndex, desc);
+}
+
+void Context::CreateMemoryPool() {
+    m_memoryPool = std::make_unique<MemoryPoolImpl>(this);
 }
 
 //
@@ -304,7 +326,7 @@ int NodeBase::RawMemoryVolume() {
 
 void NodeBase::SetMemory(const dnnl::memory::desc &desc) {
     m_memory_desc = desc;
-    m_memory = dnnl::memory(desc, m_context->Engine());
+    m_memory = m_context->GetMemory(desc);
 }
 
 void NodeBase::SetMemory(const dnnl::memory::desc &desc, const dnnl::memory &memory) {
@@ -348,14 +370,6 @@ void NodeBase::ReadRowMajor(void *data, int offset, int size) {
         }
         memcpy(data, src + offset, size);
     } else if (engine.get_kind() == dnnl::engine::kind::gpu) {
-#if 1 // TODO: Revise this
-        uint8_t *src = static_cast<uint8_t *>(m_memory.map_data());
-        if (src == nullptr) {
-            core::Error("Cannot map memory");
-        }
-        memcpy(data, src + offset, size);
-        m_memory.unmap_data(src);
-#else
         cl_command_queue queue = dnnl::ocl_interop::get_command_queue(m_context->Stream());
         cl_mem src = dnnl::ocl_interop::get_mem_object(m_memory);
         if (src == nullptr) {
@@ -375,7 +389,6 @@ void NodeBase::ReadRowMajor(void *data, int offset, int size) {
         if (status != CL_SUCCESS) {
             core::Error("OpenCL error: status %d", int(status));
         }        
-#endif
     } else {
         assert(false);
     }
@@ -397,14 +410,6 @@ void NodeBase::WriteRowMajor(const void *data, int offset, int size) {
         }
         memcpy(dst + offset, data, size);
     } else if (engine.get_kind() == dnnl::engine::kind::gpu) {
-#if 1 // TODO: Revise this
-        uint8_t *dst = static_cast<uint8_t *>(m_memory.map_data());
-        if (dst == nullptr) {
-            core::Error("Cannot map memory");
-        }
-        memcpy(dst + offset, data, size);
-        m_memory.unmap_data(dst);
-#else
         cl_command_queue queue = dnnl::ocl_interop::get_command_queue(m_context->Stream());
         cl_mem dst = dnnl::ocl_interop::get_mem_object(m_memory);
         if (dst == nullptr) {
@@ -424,7 +429,6 @@ void NodeBase::WriteRowMajor(const void *data, int offset, int size) {
         if (status != CL_SUCCESS) {
             core::Error("OpenCL error: status %d", int(status));
         }        
-#endif
     } else {
         assert(false);
     }

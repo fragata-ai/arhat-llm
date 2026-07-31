@@ -181,6 +181,7 @@ copy $(TargetPath) ..\..\lib\release\arhat_onednn_base.lib</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\arhat\src\arhat\onednn\base\binary.cpp" />
+    <ClCompile Include="..\..\arhat\src\arhat\onednn\base\buffer.cpp" />
     <ClCompile Include="..\..\arhat\src\arhat\onednn\base\cast.cpp" />
     <ClCompile Include="..\..\arhat\src\arhat\onednn\base\concat.cpp" />
     <ClCompile Include="..\..\arhat\src\arhat\onednn\base\context.cpp" />

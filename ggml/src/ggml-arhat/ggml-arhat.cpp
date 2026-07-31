@@ -74,10 +74,14 @@ static void ggml_backend_arhat_context_reset(ggml_backend_arhat_context *ctx);
 
 struct ggml_backend_arhat_buffer_context { 
     std::vector<std::unique_ptr<core::Node>> nodes;
+    int bufferIndex;
 };
 
 static void ggml_backend_arhat_buffer_free_buffer(ggml_backend_buffer_t buffer) {
     ggml_backend_arhat_buffer_context *ctx = (ggml_backend_arhat_buffer_context *)buffer->context;
+    ggml_backend_arhat_context *backend_ctx = ggml_arhat_context_init(buffer->buft->device);
+    core::Context *context = ggml_backend_arhat_context_get_impl(backend_ctx);
+    context->DeleteBuffer(ctx->bufferIndex);
     delete ctx;
 }
 
@@ -92,7 +96,9 @@ static enum ggml_status ggml_backend_arhat_buffer_init_tensor(ggml_backend_buffe
     ggml_backend_arhat_buffer_context *ctx = ggml_backend_arhat_context_get_cur_buf_ctx(backend_ctx);
     GGML_ASSERT(ctx != nullptr);
     core::Context *context = ggml_backend_arhat_context_get_impl(backend_ctx);
-    std::unique_ptr<core::Node> node = ggml_arhat_create_node(context, tensor);
+    size_t tensorAddr = (char *)tensor->data - (char *)ggml_backend_arhat_buffer_get_base(buffer);
+    std::unique_ptr<core::Node> node = 
+        ggml_arhat_create_node(context, tensor, ctx->bufferIndex, tensorAddr);
     core::Node *node_ptr = node.get();
     ctx->nodes.emplace_back(std::move(node));
     tensor->extra = node_ptr;
@@ -129,8 +135,10 @@ static void ggml_backend_arhat_buffer_clear(ggml_backend_buffer_t buffer, uint8_
 static void ggml_backend_arhat_buffer_reset(ggml_backend_buffer_t buffer) {
     ggml_backend_arhat_buffer_context *ctx = (ggml_backend_arhat_buffer_context *)buffer->context;
     ggml_backend_arhat_context *backend_ctx = ggml_arhat_context_init(buffer->buft->device);
+    core::Context *context = ggml_backend_arhat_context_get_impl(backend_ctx);
     ggml_backend_arhat_context_set_cur_buf_ctx(backend_ctx, ctx);
     ctx->nodes.clear();
+    context->ResetBuffer(ctx->bufferIndex);
     ggml_backend_arhat_context_reset(backend_ctx);
 }
 
@@ -162,7 +170,9 @@ static const char *ggml_backend_arhat_buffer_type_get_name(ggml_backend_buffer_t
 static ggml_backend_buffer_t ggml_backend_arhat_buffer_type_alloc_buffer(
         ggml_backend_buffer_type_t buffer_type, size_t size) { 
     ggml_backend_arhat_context *backend_ctx = ggml_arhat_context_init(buffer_type->device); 
+    core::Context *context = ggml_backend_arhat_context_get_impl(backend_ctx);
     ggml_backend_arhat_buffer_context *ctx = new ggml_backend_arhat_buffer_context();
+    ctx->bufferIndex = context->CreateBuffer();
     ggml_backend_arhat_context_set_cur_buf_ctx(backend_ctx, ctx);
     return ggml_backend_buffer_init(buffer_type, ggml_backend_arhat_buffer_interface, ctx, size); 
 }

@@ -937,7 +937,6 @@ void MulMatNode::InitIdHelper() {
 }
 
 void MulMatNode::InitQuantize() {
-    // TODO: Implement pool allocation for temporary memory
     dnnl::memory::dims aDims = m_aDesc.get_dims();
     m_aTempDim3 = (aDims[3] + MATRIX_ROW_PADDING - 1) & ~(MATRIX_ROW_PADDING - 1);
     m_aTempQuant = base::QuantMode::Q8_1;

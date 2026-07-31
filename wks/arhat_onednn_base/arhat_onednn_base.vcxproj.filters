@@ -85,5 +85,8 @@
     <ClCompile Include="..\..\arhat\src\arhat\onednn\base\cast.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\arhat\src\arhat\onednn\base\buffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

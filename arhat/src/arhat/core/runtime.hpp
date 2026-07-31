@@ -185,9 +185,16 @@ public:
     Context();
     virtual ~Context();
 public:
+    static constexpr size_t NULL_BUFFER_ADDR = ~size_t(0);
+public:
     virtual Device *GetDevice() = 0;
     virtual void Wait() = 0;
     virtual void Reset();
+    // buffer management
+    virtual int CreateBuffer() = 0;
+    virtual void ResetBuffer(int index) = 0;
+    virtual void DeleteBuffer(int index) = 0;
+    virtual void SetBuffer(int index, size_t addr) = 0;
     // node factories
     virtual std::unique_ptr<Node> CreateTensor(DataType type, const Dims &shape);
     virtual std::unique_ptr<Node> CreateDup(Node *a, bool inplace);

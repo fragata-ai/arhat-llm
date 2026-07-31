@@ -323,6 +323,9 @@ We welcome user feedback on evaluation of further models.
     * [Apertus-8B-Instruct-2509-Q4_K_M](https://huggingface.co/unsloth/Apertus-8B-Instruct-2509-GGUF/blob/main/Apertus-8B-Instruct-2509-Q4_K_M.gguf)
     * [Apertus-8B-Instruct-2509-Q6_K](https://huggingface.co/unsloth/Apertus-8B-Instruct-2509-GGUF/blob/main/Apertus-8B-Instruct-2509-Q6_K.gguf)
 
+* DeepSeek-R1
+    * [DeepSeek-R1-0528-Qwen3-8B-Q4_K_M](https://huggingface.co/unsloth/DeepSeek-R1-0528-Qwen3-8B-GGUF/blob/main/DeepSeek-R1-0528-Qwen3-8B-Q4_K_M.gguf)
+
 * Falcon 3
     * [Falcon3-7B-Instruct-Q6_K](https://huggingface.co/bartowski/Falcon3-7B-Instruct-GGUF/blob/main/Falcon3-7B-Instruct-Q6_K.gguf)
 
@@ -335,25 +338,36 @@ We welcome user feedback on evaluation of further models.
     * [gemma-3-12b-it-Q8_0](https://huggingface.co/ggml-org/gemma-3-12b-it-GGUF/blob/main/gemma-3-12b-it-Q8_0.gguf)
 
 * Gemma 4
-    * [gemma-4-E4B-it-UD-Q4_K_XL.gguf](https://huggingface.co/unsloth/gemma-4-E4B-it-GGUF/blob/main/gemma-4-E4B-it-UD-Q4_K_XL.gguf)
-    * [gemma-4-12b-it-UD-Q4_K_XL.gguf](https://huggingface.co/unsloth/gemma-4-12b-it-GGUF/blob/main/gemma-4-12b-it-UD-Q4_K_XL.gguf)
+    * [gemma-4-E4B-it-UD-Q4_K_XL](https://huggingface.co/unsloth/gemma-4-E4B-it-GGUF/blob/main/gemma-4-E4B-it-UD-Q4_K_XL.gguf)
+    * [gemma-4-12b-it-UD-Q4_K_XL](https://huggingface.co/unsloth/gemma-4-12b-it-GGUF/blob/main/gemma-4-12b-it-UD-Q4_K_XL.gguf)
+    * [gemma-4-26B-A4B-it-Q4_0](https://huggingface.co/ggml-org/gemma-4-26B-A4B-it-GGUF/blob/main/gemma-4-26B-A4B-it-Q4_0.gguf)
 
 * GPT OSS
-    * [gpt-oss-20b-UD-Q4_K_XL.gguf](https://huggingface.co/unsloth/gpt-oss-20b-GGUF/blob/main/gpt-oss-20b-UD-Q4_K_XL.gguf)
+    * [gpt-oss-20b-UD-Q4_K_XL](https://huggingface.co/unsloth/gpt-oss-20b-GGUF/blob/main/gpt-oss-20b-UD-Q4_K_XL.gguf)
     * [gpt-oss-20b-MXFP4](https://huggingface.co/ggml-org/gpt-oss-20b-GGUF/blob/main/gpt-oss-20b-MXFP4.gguf)
+
+* Granite 4.0
+    * [granite-4.0-1b-Q4_K_M](https://huggingface.co/unsloth/granite-4.0-1b-GGUF/blob/main/granite-4.0-1b-Q4_K_M.gguf)
+    * [granite-4.0-1b-Q6_K](https://huggingface.co/unsloth/granite-4.0-1b-GGUF/blob/main/granite-4.0-1b-Q6_K.gguf)
+    * [granite-4.0-1b-Q8_0](https://huggingface.co/unsloth/granite-4.0-1b-GGUF/blob/main/granite-4.0-1b-Q8_0.gguf)
 
 * Kimi-VL
     * [Kimi-VL-A3B-Thinking-2506-Q4_K_M](https://huggingface.co/ggml-org/Kimi-VL-A3B-Thinking-2506-GGUF/blob/main/Kimi-VL-A3B-Thinking-2506-Q4_K_M.gguf)
 
 * Llama 3.1
     * [Llama-3.1-8B-Instruct-Q4_0](https://huggingface.co/unsloth/Llama-3.1-8B-Instruct-GGUF/blob/main/Llama-3.1-8B-Instruct-Q4_0.gguf)
-    * [Llama-3.1-8B-Instruct-Q4_K_M.gguf](https://huggingface.co/unsloth/Llama-3.1-8B-Instruct-GGUF/blob/main/Llama-3.1-8B-Instruct-Q4_K_M.gguf)
-    * [Llama-3.1-8B-Instruct-Q6_K.gguf](https://huggingface.co/unsloth/Llama-3.1-8B-Instruct-GGUF/blob/main/Llama-3.1-8B-Instruct-Q6_K.gguf)
+    * [Llama-3.1-8B-Instruct-Q4_K_M](https://huggingface.co/unsloth/Llama-3.1-8B-Instruct-GGUF/blob/main/Llama-3.1-8B-Instruct-Q4_K_M.gguf)
+    * [Llama-3.1-8B-Instruct-Q6_K](https://huggingface.co/unsloth/Llama-3.1-8B-Instruct-GGUF/blob/main/Llama-3.1-8B-Instruct-Q6_K.gguf)
 
 * Ministral 3
     * [Ministral-3-3B-Reasoning-2512-Q8_0](https://huggingface.co/ggml-org/Ministral-3-3B-Reasoning-2512-GGUF/blob/main/Ministral-3-3B-Reasoning-2512-Q8_0.gguf)
     * [Ministral-3-8B-Reasoning-2512-Q8_0](https://huggingface.co/ggml-org/Ministral-3-8B-Reasoning-2512-GGUF/blob/main/Ministral-3-8B-Reasoning-2512-Q8_0.gguf)
     * [Ministral-3-14B-Reasoning-2512-Q8_0](https://huggingface.co/ggml-org/Ministral-3-14B-Reasoning-2512-GGUF/blob/main/Ministral-3-14B-Reasoning-2512-Q8_0.gguf)
+
+* Mistral Small 3.2
+    * [Mistral-Small-3.2-24B-Instruct-2506-Q2_K_L](https://huggingface.co/unsloth/Mistral-Small-3.2-24B-Instruct-2506-GGUF/blob/main/Mistral-Small-3.2-24B-Instruct-2506-Q2_K_L.gguf
+    * [Mistral-Small-3.2-24B-Instruct-2506-Q3_K_M](https://huggingface.co/unsloth/Mistral-Small-3.2-24B-Instruct-2506-GGUF/blob/main/Mistral-Small-3.2-24B-Instruct-2506-Q3_K_M.gguf
+    * [Mistral-Small-3.2-24B-Instruct-2506-Q4_K_M](https://huggingface.co/unsloth/Mistral-Small-3.2-24B-Instruct-2506-GGUF/blob/main/Mistral-Small-3.2-24B-Instruct-2506-Q4_K_M.gguf
 
 * Phi3
     * [Phi-3-mini-4k-instruct-q4](https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf/blob/main/Phi-3-mini-4k-instruct-q4.gguf)
@@ -370,6 +384,9 @@ We welcome user feedback on evaluation of further models.
     * [Qwen3.5-9B-Q4_K_M](https://huggingface.co/unsloth/Qwen3.5-9B-GGUF/blob/main/Qwen3.5-9B-Q4_K_M.gguf)
     * [Qwen3.5-9B-Q6_K](https://huggingface.co/unsloth/Qwen3.5-9B-GGUF/blob/main/Qwen3.5-9B-Q6_K.gguf)
     * [Qwen3.5-9B-Q8_0](https://huggingface.co/unsloth/Qwen3.5-9B-GGUF/blob/main/Qwen3.5-9B-Q8_0.gguf)
+
+* Qwen3.6
+    * [Qwen3.6-35B-A3B-UD-Q4_K_M](https://huggingface.co/unsloth/Qwen3.6-35B-A3B-GGUF/blob/main/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf)
 
 * TinyLlama
     * [TinyLlama-1.1B-Chat-v1.0-Q4_K_M](https://huggingface.co/andrijdavid/TinyLlama-1.1B-Chat-v1.0-GGUF/blob/main/TinyLlama-1.1B-Chat-v1.0-Q4_K_M.gguf)

@@ -35,11 +35,15 @@ namespace {
 //    LoadTiles
 //
 
+// Added 'kbx0_left' argument to all 'load_tiles' functions as
+// crude quick fix for apparent OOB bug inherited from CUDA prototype
+
 const char g_codeLoadTiles_Q4_0[] = R"(
 inline void load_tiles_q4_0(
         const global char *x, 
         local int *x_tile,
-        const int kbx0, 
+        const int kbx0,
+        const int kbx0_left,
         const int i_max, 
         const int stride) {
 
@@ -75,7 +79,10 @@ inline void load_tiles_q4_0(
 #endif
     }
 
+#if 0 // TODO: Revise this
     const int kbxd = LID_0 % BLOCKS_PER_TILE_X_ROW;
+#endif
+    const int kbxd = min((int)(LID_0 % BLOCKS_PER_TILE_X_ROW), kbx0_left - 1);
 
     unroll_for (int i0 = 0; i0 < MMQ_Y; i0 += NUM_SGS * ROWS_PER_SG) {
         int i = i0 + LID_1 * ROWS_PER_SG + LID_0 / BLOCKS_PER_TILE_X_ROW;
@@ -101,6 +108,7 @@ inline void load_tiles_q4_1(
         const global char *x, 
         local int *x_tile, 
         const int kbx0, 
+        const int kbx0_left,
         const int i_max, 
         const int stride) {
 
@@ -134,7 +142,10 @@ inline void load_tiles_q4_1(
 #endif
     }
 
+#if 0 // TODO: Revise this
     const int kbxd = LID_0 % BLOCKS_PER_TILE_X_ROW;
+#endif
+    const int kbxd = min((int)(LID_0 % BLOCKS_PER_TILE_X_ROW), kbx0_left - 1);
 
     unroll_for (int i0 = 0; i0 < MMQ_Y; i0 += NUM_SGS * ROWS_PER_SG) {
         int i = i0 + LID_1 * ROWS_PER_SG + LID_0 / BLOCKS_PER_TILE_X_ROW;
@@ -160,6 +171,7 @@ inline void load_tiles_q5_0(
         const global char *x, 
         local int *x_tile, 
         const int kbx0, 
+        const int kbx0_left,
         const int i_max, 
         const int stride) {
 
@@ -210,7 +222,10 @@ inline void load_tiles_q5_0(
 #endif
     }
 
+#if 0 // TODO: Revise this
     const int kbxd = LID_0 % BLOCKS_PER_TILE_X_ROW;
+#endif
+    const int kbxd = min((int)(LID_0 % BLOCKS_PER_TILE_X_ROW), kbx0_left - 1);
 
     unroll_for (int i0 = 0; i0 < MMQ_Y; i0 += NUM_SGS * ROWS_PER_SG) {
         int i = i0 + LID_1 * ROWS_PER_SG + LID_0 / BLOCKS_PER_TILE_X_ROW;
@@ -236,6 +251,7 @@ inline void load_tiles_q5_1(
         const global char *x, 
         local int *x_tile, 
         const int kbx0, 
+        const int kbx0_left,
         const int i_max, 
         const int stride) {
 
@@ -284,7 +300,10 @@ inline void load_tiles_q5_1(
 #endif
     }
 
+#if 0 // TODO: Revise this
     const int kbxd = LID_0 % BLOCKS_PER_TILE_X_ROW;
+#endif
+    const int kbxd = min((int)(LID_0 % BLOCKS_PER_TILE_X_ROW), kbx0_left - 1);
 
     unroll_for (int i0 = 0; i0 < MMQ_Y; i0 += NUM_SGS * ROWS_PER_SG) {
         int i = i0 + LID_1 * ROWS_PER_SG + LID_0 / BLOCKS_PER_TILE_X_ROW;
@@ -310,6 +329,7 @@ inline void load_tiles_q8_0(
         const global char *x, 
         local int *x_tile, 
         const int kbx0, 
+        const int kbx0_left,
         const int i_max, 
         const int stride) {
 
@@ -343,7 +363,10 @@ inline void load_tiles_q8_0(
 #endif
     }
 
+#if 0 // TODO: Revise this
     const int kbxd = LID_0 % BLOCKS_PER_TILE_X_ROW;
+#endif
+    const int kbxd = min((int)(LID_0 % BLOCKS_PER_TILE_X_ROW), kbx0_left - 1);
 
     unroll_for (int i0 = 0; i0 < MMQ_Y; i0 += NUM_SGS * ROWS_PER_SG) {
         int i = i0 + LID_1 * ROWS_PER_SG + LID_0 / BLOCKS_PER_TILE_X_ROW;
@@ -369,6 +392,7 @@ inline void load_tiles_q2_K(
         const global char *x, 
         local int *x_tile, 
         const int kbx0, 
+        const int kbx0_left,
         const int i_max, 
         const int stride) {
 
@@ -423,6 +447,7 @@ inline void load_tiles_q3_K(
         const global char *x, 
         local int *x_tile, 
         const int kbx0, 
+        const int kbx0_left,
         const int i_max, 
         const int stride) {
 
@@ -533,6 +558,7 @@ inline void load_tiles_q4_K(
         const global char *x, 
         local int *x_tile, 
         const int kbx0, 
+        const int kbx0_left,
         const int i_max, 
         const int stride) {
 
@@ -631,6 +657,7 @@ inline void load_tiles_q5_K(
         const global char *x, 
         local int *x_tile, 
         const int kbx0, 
+        const int kbx0_left,
         const int i_max, 
         const int stride) {
 
@@ -740,6 +767,7 @@ inline void load_tiles_q6_K(
         const global char *x, 
         local int *x_tile, 
         const int kbx0, 
+        const int kbx0_left,
         const int i_max, 
         const int stride) {
 
@@ -825,6 +853,7 @@ inline void load_tiles_mxfp4(
         const global char *x, 
         local int *x_tile, 
         const int kbx0, 
+        const int kbx0_left,
         const int i_max, 
         const int stride) {
 
@@ -862,7 +891,10 @@ inline void load_tiles_mxfp4(
 #endif
     }
 
+#if 0 // TODO: Revise this
     const int kbxd = LID_0 % BLOCKS_PER_TILE_X_ROW;
+#endif
+    const int kbxd = min((int)(LID_0 % BLOCKS_PER_TILE_X_ROW), kbx0_left - 1);
 
     unroll_for (int i0 = 0; i0 < MMQ_Y; i0 += NUM_SGS * ROWS_PER_SG) {
         int i = i0 + LID_1 * ROWS_PER_SG + LID_0 / BLOCKS_PER_TILE_X_ROW;
@@ -1334,7 +1366,7 @@ inline void mul_mat_q_process_tile(
     float sum[MMQ_X * MMQ_Y / (NUM_SGS * SG_SIZE)] = {0.0f};
 
     for (int kb0 = kb0_start; kb0 < kb0_stop; kb0 += BLOCKS_PER_ITER) {
-        LOAD_TILES(x, tile_x, offset_x + kb0, tile_x_max_i, stride_row_x);
+        LOAD_TILES(x, tile_x, offset_x + kb0, kb0_stop - kb0, tile_x_max_i, stride_row_x);
         {
             const global int *by0 = y + ncols_y * (kb0 * QK / NE_BLOCK) * NE_BLOCK_Q8_1_MMQ;
             unroll_for (int l0 = 0; l0 < MMQ_X * MMQ_TILE_Y_K; l0 += NUM_SGS * SG_SIZE) {
