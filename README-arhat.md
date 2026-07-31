@@ -365,9 +365,9 @@ We welcome user feedback on evaluation of further models.
     * [Ministral-3-14B-Reasoning-2512-Q8_0](https://huggingface.co/ggml-org/Ministral-3-14B-Reasoning-2512-GGUF/blob/main/Ministral-3-14B-Reasoning-2512-Q8_0.gguf)
 
 * Mistral Small 3.2
-    * [Mistral-Small-3.2-24B-Instruct-2506-Q2_K_L](https://huggingface.co/unsloth/Mistral-Small-3.2-24B-Instruct-2506-GGUF/blob/main/Mistral-Small-3.2-24B-Instruct-2506-Q2_K_L.gguf
-    * [Mistral-Small-3.2-24B-Instruct-2506-Q3_K_M](https://huggingface.co/unsloth/Mistral-Small-3.2-24B-Instruct-2506-GGUF/blob/main/Mistral-Small-3.2-24B-Instruct-2506-Q3_K_M.gguf
-    * [Mistral-Small-3.2-24B-Instruct-2506-Q4_K_M](https://huggingface.co/unsloth/Mistral-Small-3.2-24B-Instruct-2506-GGUF/blob/main/Mistral-Small-3.2-24B-Instruct-2506-Q4_K_M.gguf
+    * [Mistral-Small-3.2-24B-Instruct-2506-Q2_K_L](https://huggingface.co/unsloth/Mistral-Small-3.2-24B-Instruct-2506-GGUF/blob/main/Mistral-Small-3.2-24B-Instruct-2506-Q2_K_L.gguf)
+    * [Mistral-Small-3.2-24B-Instruct-2506-Q3_K_M](https://huggingface.co/unsloth/Mistral-Small-3.2-24B-Instruct-2506-GGUF/blob/main/Mistral-Small-3.2-24B-Instruct-2506-Q3_K_M.gguf)
+    * [Mistral-Small-3.2-24B-Instruct-2506-Q4_K_M](https://huggingface.co/unsloth/Mistral-Small-3.2-24B-Instruct-2506-GGUF/blob/main/Mistral-Small-3.2-24B-Instruct-2506-Q4_K_M.gguf)
 
 * Phi3
     * [Phi-3-mini-4k-instruct-q4](https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf/blob/main/Phi-3-mini-4k-instruct-q4.gguf)
